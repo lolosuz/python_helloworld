@@ -1,0 +1,31 @@
+# Workflow to ensure whenever a Github PR is submitted, 
+# a JIRA ticket gets created automatically. 
+name: Docker Build
+
+# Controls when the action will run. 
+on: [push]
+
+jobs:
+  build-and-deploy-python-apps:
+    name: Build an deploy a Python App
+    runs-on: ubuntu-latest
+    strategy:
+        matrix:
+              python-version:[3.7, 3.8]
+    steps:
+      uses: actions/checkout@master@v2
+    - name: Setup Python ${{matrix.python-version}}
+      uses: actions/checkout@setup-python@v2
+      with: 
+        python-version: ${{matrix.python-version}}
+    - name: Install Dependencies
+      run: |
+           python -m pip install --upgrade pip
+           pip install pytest
+           if [ - requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Test with Pytest
+      run pytest
+    - name: Build Docker image
+      run: docker build -t python-helloworld
+    - name: store and distribute an image using DockerHub
+      run: docker push lolosuz/python-helloworld:v1.0.0
