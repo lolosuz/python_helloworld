@@ -6,8 +6,7 @@ name: Docker Build
 on: [push]
 
 jobs:
-  build-and-deploy-python-apps:
-    name: Build an deploy a Python App
+  build:
     runs-on: ubuntu-latest
     strategy:
         matrix:
