@@ -1,18 +1,18 @@
-# Workflow to ensure whenever a Github PR is submitted, 
-# a JIRA ticket gets created automatically. 
-name: Docker Build
+name: Docker_Build
 
-# Controls when the action will run. 
 on: [push]
 
 jobs:
-  build:
+   build-docker:
     runs-on: ubuntu-latest
+    name: A job to say hello
     strategy:
         matrix:
               python-version:[3.7, 3.8]
+              
     steps:
-      uses: actions/checkout@master@v2
+    - name: Checkout
+      uses: actions/checkout@main@v2
     - name: Setup Python ${{matrix.python-version}}
       uses: actions/checkout@setup-python@v2
       with: 
@@ -23,7 +23,7 @@ jobs:
            pip install pytest
            if [ - requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Test with Pytest
-      run pytest
+      run: pytest
     - name: Build Docker image
       run: docker build -t python-helloworld
     - name: store and distribute an image using DockerHub
